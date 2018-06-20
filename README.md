@@ -83,6 +83,19 @@ docker service create --name worker --network frontend --network backend dockers
 docker service create --name result -p 4444:80 --network backend dockersamples/examplevotingapp_result:before
 ```
 
+### Swarm stacks y compose nivel produccion
+
+```bash
+# Docker stack deploy -c <nombre del archivo stack> <nombre del stack>
+docker stack deploy -c example-voting-app-stack.yml voteapp
+# Listar los stacks
+docker stack ls
+# Muestra info del stack voteapp
+docker stack ps voteapp
+# Muestra los servicios del stack voteapp
+docker stack services voteapp
+```
+
 ## Section 5 - Ciclo de vida de una Swarm App
 
 ## Section 6 - Controlando la ubicacion dentro de un swarm
