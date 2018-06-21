@@ -85,6 +85,8 @@ docker service create --name result -p 4444:80 --network backend dockersamples/e
 
 ### Swarm stacks y compose nivel produccion
 
+Para utilizar un stack, se requiere un archivo docker-compose version 3 minimo.
+
 ```bash
 # Docker stack deploy -c <nombre del archivo stack> <nombre del stack>
 docker stack deploy -c example-voting-app-stack.yml voteapp
@@ -94,6 +96,31 @@ docker stack ls
 docker stack ps voteapp
 # Muestra los servicios del stack voteapp
 docker stack services voteapp
+```
+
+Al modificar el archivo yml para actualizar la configuracion del stack, se debe de correr el mismo comando. Swarm detectara los cambios y aplicara las actualizaciones necesarias.
+
+### Secrets Storage para swarm
+
+```bash
+# Crear un secreto con nombre psql_user de un archivo psql_user.txt
+docker secret create psql_user psql_user.txt
+# Crear un secreto utilizando standar input
+echo "mydbpass" | docker secret create psql_pass -
+# Listando los secretos
+docker secret ls
+# Crear un servicio con secretos
+docker service create --name psql --secret psql_user --secret psql_pass -e POSTGRES_PASSWORD_FILE=/run/secrets/
+psql_pass -e POSTGRES_USER_FILE=/run/secrets/psql_user postgres
+# Remover un secreto
+docker service update --secret-rm <nombre del secreto>
+```
+
+### Usando secretos con swarm stacks
+
+```bash
+# El archivo compose tiene que ser minimo version 3.1 para usar stacks con secrets
+docker stack deploy -c docker-compose.yml mydb
 ```
 
 ## Section 5 - Ciclo de vida de una Swarm App
