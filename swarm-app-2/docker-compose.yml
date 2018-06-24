@@ -31,7 +31,7 @@ services:
     volumes:
       - drupal-data:/var/lib/postgresql/data
     networks:
-      - drupal      
+      - drupal-network  
 
 volumes:
   drupal-data:
