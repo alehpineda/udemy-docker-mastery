@@ -9,25 +9,18 @@ services:
   drupal:
     image: drupal:8.5.4
     ports:
-      - "8080:80"
+      - "80:80"
     volumes:
       - drupal-modules:/var/www/html/modules
       - drupal-profiles:/var/www/html/profiles       
       - drupal-sites:/var/www/html/sites      
       - drupal-themes:/var/www/html/themes
     networks:
-      - drupal
+      - drupal-network
     depends_on:
       - postgres
-    deploy:
-      replicas: 2
-      update_config:
-        parallelism: 2
-        delay: 10s
-      restart_policy:
-        condition: on-failure
  
-  postgres:
+  db:
     image: postgres:10.4
     secrets:
       - psql_user
@@ -38,14 +31,7 @@ services:
     volumes:
       - drupal-data:/var/lib/postgresql/data
     networks:
-      - drupal
-    deploy:
-      replicas: 2
-      update_config:
-        parallelism: 2
-        delay: 10s
-      restart_policy:
-        condition: on-failure      
+      - drupal      
 
 volumes:
   drupal-data:
@@ -61,4 +47,4 @@ secrets:
     external: true
 
 networks:
-  drupal:
+  drupal-network:
