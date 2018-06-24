@@ -29,6 +29,9 @@ services:
  
   postgres:
     image: postgres:10.4
+    secrets:
+      - psql_user
+      - psql_passwd    
     environment:
       POSTGRES_PASSWORD_FILE: /run/secrets/psql_passwd
       POSTGRES_USER_FILE: /run/secrets/psql_user
@@ -42,7 +45,7 @@ services:
         parallelism: 2
         delay: 10s
       restart_policy:
-        condition: on-failure
+        condition: on-failure      
 
 volumes:
   drupal-data:
