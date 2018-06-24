@@ -7,9 +7,9 @@ version: '3.1'
 services:
 
   drupal:
-    image: drupal:8.5.4
+    image: drupal:8.2
     ports:
-      - "80:80"
+      - "8080:80"
     volumes:
       - drupal-modules:/var/www/html/modules
       - drupal-profiles:/var/www/html/profiles       
@@ -20,14 +20,12 @@ services:
     depends_on:
       - postgres
  
-  db:
-    image: postgres:10.4
+  postgres:
+    image: postgres:9.6
     secrets:
-      - psql_user
-      - psql_passwd    
+      - psql_passwd   
     environment:
-      POSTGRES_PASSWORD: 'mydbpass'
-      POSTGRES_USER: 'postgres'
+      POSTGRES_PASSWORD_FILE: /run/secrets/psql_password
     volumes:
       - drupal-data:/var/lib/postgresql/data
     networks:
@@ -41,8 +39,6 @@ volumes:
   drupal-themes:
 
 secrets:
-  psql_user:
-    external: true
   psql_passwd:
     external: true
 
