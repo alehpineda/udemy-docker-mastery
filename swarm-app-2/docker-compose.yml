@@ -15,6 +15,17 @@ services:
       - drupal-profiles:/var/www/html/profiles       
       - drupal-sites:/var/www/html/sites      
       - drupal-themes:/var/www/html/themes
+    networks:
+      - drupal
+    depends_on:
+      - postgres
+    deploy:
+      replicas: 2
+      update_config:
+        parallelism: 2
+        delay: 10s
+      restart_policy:
+        condition: on-failure
  
   postgres:
     image: postgres:9.6
@@ -23,6 +34,15 @@ services:
       POSTGRES_USER_FILE: /run/secrets/psql_user
     volumes:
       - drupal-data:/var/lib/postgresql/data
+    networks:
+      - drupal
+    deploy:
+      replicas: 2
+      update_config:
+        parallelism: 2
+        delay: 10s
+      restart_policy:
+        condition: on-failure       
 
 volumes:
   drupal-data:
@@ -36,3 +56,6 @@ secrets:
     external: true
   psql_passwd:
     external: true
+
+networks:
+  drupal:
